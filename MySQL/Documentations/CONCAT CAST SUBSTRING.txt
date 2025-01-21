@@ -1,0 +1,26 @@
+SELECT * FROM orders;
+-- CAST changes the type of the data like changing date to date time or vice versa it will bring 00 since it has no time assign to it
+SELECT
+ordernumber,
+CAST(orderDate AS DATETIME) AS order_date_time,
+CAST(requiredDate AS DATETIME) AS required_date_time,
+customernumber
+FROM orders
+ORDER BY order_date_time DESC;
+-- SUBSTRING
+SELECT * FROM orders;
+-- Since all ordernumbers have 10 at the begining we can remove them and only show that from the 3 digit
+SELECT
+SUBSTRING(ordernumber,3,5) AS new_order_number,
+orderDate,
+customerNumber
+FROM orders
+WHERE orderdate > '2003-01-01'
+AND orderdate < '2004-01-01';
+-- CONCAT
+SELECT * FROM products;
+-- Merging values of different columns in one column can be made by concat
+SELECT
+CONCAT(productName,' is a product with ',productcode, ' as its code and has price of: ',buyPrice, ' $') AS product_description
+FROM products
+ORDER BY buyPrice ASC;
