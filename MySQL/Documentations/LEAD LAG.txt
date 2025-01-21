@@ -1,0 +1,5 @@
+SELECT * FROM customers;
+-- showing each customernumber with next customers customernumber
+SELECT customernumber,
+LAG(customernumber) OVER (ORDER BY customernumber) AS next_customer_number
+FROM customers

@@ -1,0 +1,37 @@
+SELECT * FROM orders;
+-- creating a new column with case (if - esle)
+WITH difficult_orders
+AS
+(SELECT 
+ordernumber,
+orderdate,
+comments,
+CASE
+WHEN upper(comments) LIKE '%DIFFICULT%' then 1
+ELSE 0
+END AS case_difficult_flag
+FROM orders)
+SELECT
+count(case_difficult_flag) as Total_difficult_orders
+FROM difficult_orders
+WHERE case_difficult_flag = 1;
+
+SELECT * FROM customers;
+-- creating a new column with case (if - esle)
+WITH creditlimit_group
+AS
+(SELECT 
+customernumber,
+city,
+creditlimit,
+CASE
+WHEN creditlimit > 150000 then 'over 150K'
+WHEN creditlimit between 150000 and 100000 then 'between 100K and 150K'
+WHEN creditlimit between 100000 and 50000 then 'between 50K and 100K'
+ELSE 'Lower than 50K'
+END AS Credit_group
+FROM customers)
+SELECT
+count(Credit_group) as Total_over_150K
+FROM creditlimit_group
+WHERE Credit_group = 'Lower than 50K';

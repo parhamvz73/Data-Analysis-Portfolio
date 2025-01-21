@@ -1,0 +1,14 @@
+SELECT * FROM products;
+-- searching for descriptions containing new with productcode
+SELECT
+productcode,
+productdescription
+FROM products
+WHERE upper(productdescription) LIKE '%NEW%';
+-- searching for orders for ordernumbers including 4 or 3
+SELECT 
+ordernumber,
+orderdate
+FROM orders
+WHERE ordernumber LIKE '%3%'
+OR ordernumber LIKE '%4%';

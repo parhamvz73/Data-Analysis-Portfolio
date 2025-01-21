@@ -1,0 +1,35 @@
+SELECT * FROM employees;
+SELECT * FROM customers;
+-- joining these 2 tables where we have same employee number
+SELECT
+distinct A.customername,
+A.country,
+A.city,
+B.employeenumber,
+B.email,
+B.jobtitle
+FROM customers A 
+INNER JOIN employees B
+ON A.salesRepEmployeeNumber = B.employeenumber;
+-- Getting all values from table at left( first one) which is customers even showing those rows with null for salesRepEmployeeNumber
+SELECT
+distinct A.customername,
+A.country,
+A.city,
+B.employeenumber,
+B.email,
+B.jobtitle
+FROM customers A 
+LEFT JOIN employees B
+ON A.salesRepEmployeeNumber = B.employeenumber;
+-- Getting all values from table at right(last one) which is employees even showing those rows with null for salesRepEmployeeNumber
+SELECT
+distinct A.customername,
+A.country,
+A.city,
+B.employeenumber,
+B.email,
+B.jobtitle
+FROM customers A 
+RIGHT JOIN employees B
+ON A.salesRepEmployeeNumber = B.employeenumber;

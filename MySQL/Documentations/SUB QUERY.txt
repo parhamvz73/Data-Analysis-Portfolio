@@ -1,0 +1,13 @@
+-- MIN and MAX as aggregate then we should use group by and having like getting orders from specific date to another date using min max
+SELECT
+orderdate,
+total_orders_daily
+FROM (
+SELECT 
+orderdate,
+count(ordernumber) AS total_orders_daily
+FROM orders
+GROUP BY orderdate
+) AS total_orders
+HAVING orderdate > '2003.01.01'
+AND orderdate < '2003.01.31'

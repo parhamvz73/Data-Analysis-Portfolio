@@ -1,0 +1,14 @@
+SELECT * FROM orderdetails;
+-- counting distinct customers
+WITH total_quantity
+AS
+(
+SELECT
+ordernumber,
+count(quantityordered) as total_quantity_per_ordernumber
+FROM orderdetails
+GROUP BY ordernumber)
+SELECT
+max(total_quantity_per_ordernumber) as max_quantity,
+min(total_quantity_per_ordernumber) as min_quantity
+FROM total_quantity

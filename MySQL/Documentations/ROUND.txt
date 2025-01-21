@@ -1,0 +1,19 @@
+SELECT * FROM payments;
+-- using SUM for total amount AND ROUNDING total amount paid daily ( ROUNDING 1 decimal )
+SELECT
+paymentdate,
+ROUND(SUM(amount),1) as Total_amount_daily
+FROM payments
+GROUP BY paymentdate
+Having paymentdate > '2004.01.01'
+AND paymentdate < '2004.01.31'
+ORDER BY paymentdate ASC;
+-- using SUM for total amount AND ROUNDING total amount paid daily ( ROUNDING 2 decimals )
+SELECT
+paymentdate,
+ROUND(SUM(amount),0) as Total_amount_daily
+FROM payments
+GROUP BY paymentdate
+Having paymentdate > '2004.01.01'
+AND paymentdate < '2004.01.31'
+ORDER BY paymentdate ASC;

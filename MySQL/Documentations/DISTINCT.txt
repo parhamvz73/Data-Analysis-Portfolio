@@ -1,0 +1,5 @@
+SELECT * FROM orders;
+-- counting distinct customers
+SELECT
+count(distinct customernumber) as Unique_customers
+FROM orders;

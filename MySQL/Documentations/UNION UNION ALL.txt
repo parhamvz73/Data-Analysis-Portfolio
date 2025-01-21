@@ -1,0 +1,19 @@
+SELECT * FROM employees;
+SELECT * FROM customers;
+-- merging all first names and last names from 2 tables inside one table and each name mentioned only once
+SELECT lastname as Last_Name,
+firstName as First_Name
+FROM employees
+UNION
+SELECT
+contactLastName as Last_Name,
+contactFirstName as First_Name
+FROM customers;
+-- merging all first names and last names from 2 tables inside one table and each name mentioned only once
+SELECT 
+firstName as First_Name
+FROM employees
+UNION ALL
+SELECT
+contactFirstName as First_Name
+FROM customers;

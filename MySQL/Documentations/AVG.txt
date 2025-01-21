@@ -1,0 +1,23 @@
+SELECT * FROM payments;
+-- having average of amounts in total
+SELECT
+AVG(amount) as average_amount
+FROM payments;
+-- rounding the average of amounts
+SELECT
+ROUND(AVG(amount),0) as average_amount
+FROM payments;
+-- average of 2003
+WITH customer_103
+AS
+(
+SELECT customernumber,
+amount
+FROM payments
+WHERE customernumber = 103)
+
+SELECT
+customernumber,
+AVG(amount) as average_amount
+FROM customer_103
+GROUP BY customernumber;

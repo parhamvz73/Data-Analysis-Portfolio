@@ -1,0 +1,25 @@
+SELECT * FROM orders;
+-- counting total amount of orders per day grouped by date and being shown by descending list of date
+SELECT 
+orderdate,
+count(orderdate) AS daily_order_amounts
+FROM orders
+GROUP BY orderdate
+having daily_order_amounts >= 1
+ORDER BY  orderdate DESC;
+-- to make sure it works perfectly fine if we use distinct orderdate then we only read each unique date once and then all count should be 1
+SELECT 
+orderdate,
+count(distinct orderdate) AS daily_order_amounts
+FROM orders
+GROUP BY orderdate
+having daily_order_amounts >= 1
+ORDER BY  orderdate DESC;
+-- if we say then daily_order_amounts bigger than 1 we should have a empty table
+SELECT 
+orderdate,
+count(distinct orderdate) AS daily_order_amounts
+FROM orders
+GROUP BY orderdate
+having daily_order_amounts > 1
+ORDER BY  orderdate DESC;

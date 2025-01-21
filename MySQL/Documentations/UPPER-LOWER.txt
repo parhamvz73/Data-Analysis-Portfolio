@@ -1,0 +1,20 @@
+SELECT * FROM products;
+-- using upper for matching exact value
+SELECT productcode,
+productName,
+productLine
+FROM products
+WHERE upper(productLine) = 'SHIPS';
+-- using lower for matching exact value
+SELECT productcode,
+productName,
+productLine
+FROM products
+WHERE lower(productLine) = 'vintage cars';
+-- using higher and lower in select for extra columns
+SELECT productcode,
+productName,
+productLine,
+lower(productLine) AS lower_ProductLine,
+upper(productLine) AS upper_ProductLine
+FROM products;

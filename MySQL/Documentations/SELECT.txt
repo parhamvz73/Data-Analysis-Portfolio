@@ -1,0 +1,52 @@
+-- View all rows and columns from Customers table if schema highlighted
+SELECT * FROM customers;
+-- View all rows and columns from Customers table if schema not highlighted
+SELECT * FROM classicmodels.customers;
+-- view specific columns in customers table
+SELECT
+customernumber,
+contactFirstName,
+contactLastName,
+country,
+creditlimit
+FROM customers;
+-- view specific columns in customers table limited to 10 rows
+SELECT
+customernumber,
+contactFirstName,
+contactLastName,
+country,
+creditlimit
+FROM customers
+lIMIT 10;
+-- using conditions in where like AND 
+SELECT 
+customernumber,
+country,
+city
+FROM customers
+WHERE country = 'USA'
+AND city = 'NYC';
+-- using conditions in where like OR
+SELECT 
+customernumber,
+country,
+city
+FROM customers
+WHERE country = 'USA'
+OR country = 'FRANCE';
+-- Using not equal type !=
+SELECT *
+FROM customers
+WHERE (country = 'USA'
+AND city != 'NYC');
+-- Using not equal type <>
+SELECT 
+customernumber,
+country,
+city,
+creditlimit
+FROM customers
+WHERE (country <> 'USA'
+AND country <> 'UK')
+AND creditlimit > 150000;

@@ -1,0 +1,19 @@
+SELECT * FROM payments;
+-- using SUM to see total amount paid daily
+SELECT
+paymentdate,
+SUM(amount) as Total_amount_daily
+FROM payments
+GROUP BY paymentdate
+Having paymentdate > '2004.01.01'
+AND paymentdate < '2004.01.31'
+ORDER BY paymentdate ASC;
+-- also instead of mentioning variables again and again we can use numbers like
+SELECT
+paymentdate,
+SUM(amount) as Total_amount_daily
+FROM payments
+GROUP BY 1
+Having paymentdate > '2004.01.01'
+AND paymentdate < '2004.01.31'
+ORDER BY 1 ASC;

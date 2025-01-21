@@ -1,0 +1,22 @@
+SELECT * FROM employees;
+-- filtering out some firstnames to show them
+SELECT
+employeenumber,
+firstname,
+lastname
+FROM employees
+WHERE upper(firstname) in
+('DIANE',
+'JEFF',
+'ANDY',
+'MARTIN');
+-- filtering titles and excluding them from the output
+SELECT
+employeenumber,
+firstname,
+lastname,
+jobTitle
+FROM employees
+WHERE lower(jobtitle) NOT IN
+('vp sales',
+'sales rep');
