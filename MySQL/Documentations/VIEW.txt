@@ -1,0 +1,31 @@
+SELECT * FROM orderdetails;
+SELECT * FROM products;
+-- creating a view with cte and join for 2 tables with same key
+CREATE VIEW ProductRevenueView AS
+WITH first_CTE AS (
+    SELECT
+        A.productcode AS Product_Code,
+        A.ordernumber AS Order_Number,
+        A.quantityordered AS Quantity_Ordered,
+        A.priceeach AS Price_Per_EACH,
+        B.productname AS Product_Name,
+        B.buyprice AS Base_Price,
+        B.MSRP 
+    FROM orderdetails A 
+    INNER JOIN products B
+    ON A.productcode = B.productcode
+)
+SELECT
+    Product_Code,
+    Order_Number,
+    Quantity_Ordered,
+    Price_Per_EACH,
+    Product_Name,
+    Base_Price,
+    MSRP, 
+    (Price_Per_EACH - Base_Price) AS Product_revenue,
+    (MSRP - Price_Per_EACH) AS discount
+FROM first_CTE
+ORDER BY Product_revenue DESC;
+-- showing view to make sure it works
+SELECT * FROM productrevenueview;
