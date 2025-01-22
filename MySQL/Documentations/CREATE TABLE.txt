@@ -1,0 +1,17 @@
+-- Creating new table called new employees with same columns and the time they got hired to be used with a trigger later
+SELECT * FROM employees;
+/*CODE*/
+CREATE TABLE new_employees
+(employeeNumber INT NOT NULL,
+lastName VARCHAR(50) NOT NULL,
+firstName VARCHAR(50) NOT NULL,
+extention VARCHAR(10) default NULL,
+email VARCHAR(100) NOT NULL,
+officeCode VARCHAR(10) NOT NULL,
+reportsTo INT NOT NULL,
+jobTitle VARCHAR(50) NOT NULL,
+hireDate DATETIME NOT NULL,
+PRIMARY KEY(employeeNumber)
+);
+/*REVIEW*/
+SELECT * FROM new_employees;

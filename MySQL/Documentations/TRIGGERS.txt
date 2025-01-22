@@ -1,0 +1,59 @@
+-- Creating new table called new employees with same columns and the time they got hired to be used with a trigger later
+SELECT * FROM employees;
+/*CODE*/
+CREATE TABLE new_employees
+(employeeNumber INT NOT NULL,
+lastName VARCHAR(50) NOT NULL,
+firstName VARCHAR(50) NOT NULL,
+extention VARCHAR(10) default NULL,
+email VARCHAR(100) NOT NULL,
+officeCode VARCHAR(10) NOT NULL,
+reportsTo INT NOT NULL,
+jobTitle VARCHAR(50) NOT NULL,
+hireDate DATETIME NOT NULL,
+PRIMARY KEY(employeeNumber)
+);
+/*REVIEW*/
+SELECT * FROM new_employees;
+-- trigger to add new employees when added on employees added to be shown on new_employees table
+DELIMITER $$
+CREATE TRIGGER new_employee_added
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+INSERT INTO new_employees
+(employeeNumber,
+lastName,
+firstName,
+extension,
+email,
+officeCode,
+reportsTo,
+jobTitle,
+hireDate)
+VALUES
+(NEW.employeeNumber,
+NEW.lastName,
+NEW.firstName,
+NEW.extension,
+NEW.email,
+NEW.officeCode,
+NEW.reportsTo,
+NEW.jobTitle,
+NOW());
+END$$
+DELIMITER ;
+-- checking the outcome we can not change foreign keys like office code or reports to
+INSERT INTO employees (
+    employeeNumber, lastName, firstName, extension, email, officeCode, reportsTo, jobTitle
+)
+VALUES
+(1803 , 'Vakilizand', 'Parham', 'x1994', 'Vakilizandparham@gmail.com','4', 1102, 'Data Analyst');
+-- checking new employees to see if trigger worked correctly
+SELECT * FROM new_employees;
+-- checking all triggers for this schema
+SELECT * FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA = 'classicmodels';
+SHOW TRIGGERS FROM classicmodels;
+SHOW CREATE TRIGGER new_employee_added;
+-- We cant alter the trigger we need to drop it and recreate again
+DROP TRIGGER IF EXISTS new_employee_added;
