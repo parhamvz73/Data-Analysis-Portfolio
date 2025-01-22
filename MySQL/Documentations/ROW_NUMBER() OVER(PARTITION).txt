@@ -1,0 +1,8 @@
+SELECT * FROM products;
+-- using row number and partition to rank highest quantity in stock for each product line
+SELECT
+productCode,
+ProductLine,
+quantityinstock,
+ROW_NUMBER() OVER(PARTITION BY productline ORDER BY quantityInStock DESC) AS Product_Line_Quantity_In_Stock
+FROM products;

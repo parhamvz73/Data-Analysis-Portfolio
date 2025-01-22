@@ -1,0 +1,17 @@
+SELECT * FROM orders;
+SELECT
+ordernumber,
+orderdate,
+shippeddate,
+mandatory_shipping_duration,
+shipping_duration,
+(shipping_duration - 3) AS delayed_days
+FROM
+(SELECT
+ordernumber,
+orderdate,
+shippeddate,
+DATE_ADD(orderdate, INTERVAL 3 DAY) AS mandatory_shipping_duration,
+DATEDIFF(shippeddate, orderdate) AS shipping_duration
+FROM orders) AS main_shipping_table
+ORDER BY delayed_days DESC;
