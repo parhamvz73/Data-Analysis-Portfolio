@@ -1,0 +1,39 @@
+SELECT * FROM payments;
+SELECT * FROM customers;
+DELIMITER $$
+
+CREATE PROCEDURE GetCustomerTotalPayments(
+    IN customerNumber INT, 
+    OUT totalPayments DECIMAL(10, 2)
+)
+BEGIN
+    -- Calculate the total payments for the given customerNumber
+    SELECT SUM(amount) 
+    INTO totalPayments
+    FROM payments
+    WHERE payments.customerNumber = customerNumber;
+END$$
+SET @Value = 0;
+CALL GetCustomerTotalPayments(112, @total);
+SELECT @total as totalPayments;
+-- another procedure only for calculation
+DELIMITER $$
+
+CREATE PROCEDURE double_and_increment(INOUT numberValue INT)
+BEGIN
+    -- Double the value
+    SET numberValue = numberValue * 2;
+END$$
+SET @Value = 20;
+CALL double_and_increment(@Value);
+SELECT @Value as double_and_increment;
+-- Create procedure showing customers from specific city
+DELIMITER $$
+CREATE PROCEDURE
+customer_city (IN cityName VARCHAR(50))
+BEGIN
+SELECT customernumber,city
+FROM customers
+WHERE cityName = city;
+END$$
+    CALL customer_city('Madrid');

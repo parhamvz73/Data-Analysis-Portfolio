@@ -1,0 +1,17 @@
+-- Creating function for manual discount input and calculating the discounted price
+DELIMITER $$
+
+CREATE FUNCTION CalculateDiscountedPrice(priceEach DECIMAL(10,2), quantityOrdered INT, discountRate DECIMAL(5,2))
+RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    RETURN (priceEach * quantityOrdered) * (1 - discountRate / 100);
+END$$
+-- checking the outcome
+SELECT orderNumber,
+       productCode,
+       priceEach,
+       quantityOrdered,
+       CalculateDiscountedPrice(priceEach, quantityOrdered, 10) AS DiscountedPrice
+FROM orderdetails
+WHERE orderNumber = 10100;
