@@ -301,6 +301,20 @@ INSERT INTO `productlines` VALUES ('Classic Cars','Attention car enthusiasts: Ma
 UNLOCK TABLES;
 
 --
+-- Temporary view structure for view `productlines_bought_together`
+--
+
+DROP TABLE IF EXISTS `productlines_bought_together`;
+/*!50001 DROP VIEW IF EXISTS `productlines_bought_together`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `productlines_bought_together` AS SELECT 
+ 1 AS `ordernumber`,
+ 1 AS `PROD1`,
+ 1 AS `PROD2`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary view structure for view `productrevenueview`
 --
 
@@ -470,6 +484,24 @@ DELIMITER ;
 /*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
+-- Final view structure for view `productlines_bought_together`
+--
+
+/*!50001 DROP VIEW IF EXISTS `productlines_bought_together`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `productlines_bought_together` AS with `table1` as (select `t1`.`orderNumber` AS `ordernumber`,`t2`.`productName` AS `productname`,`t2`.`productLine` AS `productline` from (`orderdetails` `t1` join `products` `t2` on((`t1`.`productCode` = `t2`.`productCode`)))) select distinct `t2`.`ordernumber` AS `ordernumber`,`t2`.`productline` AS `PROD1`,`t3`.`productline` AS `PROD2` from (`table1` `t2` join `table1` `t3` on(((`t2`.`ordernumber` = `t3`.`ordernumber`) and (`t2`.`productline` <> `t3`.`productline`)))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `productrevenueview`
 --
 
@@ -514,4 +546,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-27 12:24:36
+-- Dump completed on 2025-01-27 13:35:52
