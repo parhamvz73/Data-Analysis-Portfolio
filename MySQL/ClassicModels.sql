@@ -354,6 +354,27 @@ INSERT INTO `products` VALUES ('S10_1678','1969 Harley Davidson Ultimate Chopper
 UNLOCK TABLES;
 
 --
+-- Temporary view structure for view `sales_on_2004`
+--
+
+DROP TABLE IF EXISTS `sales_on_2004`;
+/*!50001 DROP VIEW IF EXISTS `sales_on_2004`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `sales_on_2004` AS SELECT 
+ 1 AS `ordernumber`,
+ 1 AS `orderdate`,
+ 1 AS `customernumber`,
+ 1 AS `city`,
+ 1 AS `country`,
+ 1 AS `productcode`,
+ 1 AS `productname`,
+ 1 AS `quantityordered`,
+ 1 AS `priceeach`,
+ 1 AS `buyprice`*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Dumping events for database 'classicmodels'
 --
 
@@ -465,6 +486,24 @@ DELIMITER ;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `sales_on_2004`
+--
+
+/*!50001 DROP VIEW IF EXISTS `sales_on_2004`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `sales_on_2004` AS select `table1`.`orderNumber` AS `ordernumber`,`table1`.`orderDate` AS `orderdate`,`table1`.`customerNumber` AS `customernumber`,`table3`.`city` AS `city`,`table3`.`country` AS `country`,`table2`.`productCode` AS `productcode`,`table4`.`productName` AS `productname`,`table2`.`quantityOrdered` AS `quantityordered`,`table2`.`priceEach` AS `priceeach`,`table4`.`buyPrice` AS `buyprice` from (((`orders` `table1` join `orderdetails` `table2` on((`table1`.`orderNumber` = `table2`.`orderNumber`))) join `customers` `table3` on((`table1`.`customerNumber` = `table3`.`customerNumber`))) join `products` `table4` on((`table2`.`productCode` = `table4`.`productCode`))) where (year(`table1`.`orderDate`) = 2004) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -475,4 +514,4 @@ DELIMITER ;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-01-22 11:55:11
+-- Dump completed on 2025-01-27 12:24:36
