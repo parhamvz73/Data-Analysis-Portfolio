@@ -11,3 +11,16 @@ GROUP BY orderdate
 ) AS total_orders
 HAVING orderdate > '2003.01.01'
 AND orderdate < '2003.01.31'
+
+-- showing order years after 2003 oe before with extra column
+SELECT *,
+CASE 
+        WHEN dateyear >= 2003 THEN 'Ordered After 2003'
+        ELSE 'Ordered Before 2003'
+    END AS order_year
+FROM
+(
+SELECT
+ordernumber,
+YEAR(orderdate)  as dateyear
+FROM orders) as orderyear
