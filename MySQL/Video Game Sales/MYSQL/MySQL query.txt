@@ -1,0 +1,119 @@
+-- Create Schema
+CREATE DATABASE IF NOT EXISTS video_game_sales_db;
+-- activate schema
+USE video_game_sales_db;
+-- create emoty table
+CREATE TABLE IF NOT EXISTS video_game_sales (
+    `Rank` INT PRIMARY KEY,
+    `Name` VARCHAR(255),
+    `Platform` VARCHAR(50),
+    `Year` INT,  -- Using INT because some years might be missing
+    `Genre` VARCHAR(50),
+    `Publisher` VARCHAR(255),
+    `NA_Sales` DECIMAL(6,2),
+    `EU_Sales` DECIMAL(6,2),
+    `JP_Sales` DECIMAL(6,2),
+    `Other_Sales` DECIMAL(6,2),
+    `Global_Sales` DECIMAL(6,2)
+);
+-- Add csv for table
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/video game sales.csv'
+INTO TABLE video_game_sales
+FIELDS TERMINATED BY ','  
+ENCLOSED BY '"'  
+LINES TERMINATED BY '\n'  
+IGNORE 1 ROWS;
+-- SAFE PATH FOR UPLODAING CSV FILE
+SHOW VARIABLES LIKE 'secure_file_priv';
+
+Select * from video_game_sales;
+-- dropping last column for manual calculations
+ALTER TABLE video_game_sales DROP COLUMN Global_Sales;
+-- changing sales to M dollar
+Select
+ID ,
+Name,
+Platform,
+Year,
+Genre,
+Publisher,
+NA_Sales * 1000000 AS North_America_sales,
+EU_Sales * 1000000 AS Europe_sales,
+JP_Sales * 1000000 AS Japan_sales,
+Other_Sales * 1000000 AS Other_sales
+FROM video_game_sales;
+-- Showing distinct platform and giving them ID and creating table with that
+
+SELECT 
+Platform,
+ROW_NUMBER() OVER() AS Platform_ID
+FROM
+(
+SELECT
+DISTINCT Platform AS Platform
+FROM video_game_sales
+order by platform asc ) AS Unique_Platform;
+-- creating new table for platform
+CREATE TABLE platforms (
+    Platform_ID INT,
+    Platform VARCHAR(50) UNIQUE
+);
+-- inserting data from above to the table
+INSERT INTO platforms (Platform_ID, Platform)
+SELECT 
+    ROW_NUMBER() OVER() AS Platform_ID, 
+    Platform
+FROM (
+    SELECT DISTINCT Platform 
+    FROM video_game_sales 
+    ORDER BY Platform ASC
+) AS Unique_Platform;
+-- check if table works
+SELECT * FROM platforms; -- TABKE HAVING UNIQUE ID for publisher
+ SELECT
+ uni_publisher,
+ ROW_NUMBER() OVER() AS Publisher_ID
+ FROM
+ ( SELECT
+DISTINCT publisher as uni_publisher
+FROM video_game_sales 
+ORDER BY publisher ASC) as unique_Publisher;
+-- create table including publisher id and name
+CREATE TABLE publishers (
+    Publisher_ID INT,
+    Publisher VARCHAR(50) UNIQUE
+);
+-- adding data in to table
+INSERT INTO publishers (Publisher_ID, publisher)
+ SELECT
+ ROW_NUMBER() OVER() AS Publisher_ID,
+ publisher
+ FROM
+ ( SELECT
+DISTINCT publisher as publisher
+FROM video_game_sales 
+ORDER BY publisher ASC) as unique_Publisher;
+SELECT
+ROW_NUMBER() OVER() AS Genre_ID,
+genre
+FROM
+(SELECT 
+DISTINCT genre AS genre
+FROM video_game_sales
+order by genre asc ) as unique_genre;
+-- CREATING TABLE FOR STORING GENRES
+CREATE TABLE Genres
+( Genre_ID INT,
+Genre VARCHAR(50) UNIQUE);
+-- inserting infos in to rows in genre table
+INSERT INTO Genres (Genre_ID, Genre)
+SELECT
+ROW_NUMBER() OVER() AS Genre_ID,
+genre
+FROM
+(SELECT 
+DISTINCT genre AS genre
+FROM video_game_sales
+order by genre asc ) as unique_genre;
+-- showing table called genres
+SELECT * FROM Genres;
