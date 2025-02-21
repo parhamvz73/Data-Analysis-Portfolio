@@ -1,0 +1,26 @@
+DELIMITER //
+
+CREATE PROCEDURE search_engine_advanced(IN search_term VARCHAR(255))
+BEGIN
+    SELECT 
+        ID, 
+        CASE 
+            WHEN Name LIKE CONCAT('%', search_term, '%') THEN Name
+            WHEN Platform LIKE CONCAT('%', search_term, '%') THEN Platform
+            WHEN Publisher LIKE CONCAT('%', search_term, '%') THEN Publisher
+            ELSE NULL
+        END AS Matched_Value,
+        Name LIKE CONCAT('%', search_term, '%') AS Name_Match,
+        Platform LIKE CONCAT('%', search_term, '%') AS Platform_Match,
+        Publisher LIKE CONCAT('%', search_term, '%') AS Publisher_Match
+    FROM video_game_sales
+    WHERE Name LIKE CONCAT('%', search_term, '%')
+       OR Platform LIKE CONCAT('%', search_term, '%')
+       OR Publisher LIKE CONCAT('%', search_term, '%');
+END //
+
+DELIMITER ;
+-- checking function
+CALL search_engine_advanced('NIN');
+
+-- procedure to enter year and platform id and getting worst and best games sale for that year

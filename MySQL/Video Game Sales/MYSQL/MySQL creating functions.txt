@@ -1,0 +1,20 @@
+-- creating search engine for searching for specific name inside name,publisher,platform
+DELIMITER //
+
+CREATE FUNCTION search_engine(search_term VARCHAR(255))
+RETURNS TEXT DETERMINISTIC
+BEGIN
+    DECLARE result TEXT DEFAULT '';
+    
+    SELECT GROUP_CONCAT(ID) INTO result
+    FROM video_game_sales
+    WHERE Name LIKE CONCAT('%', search_term, '%')
+       OR Platform LIKE CONCAT('%', search_term, '%')
+       OR Publisher LIKE CONCAT('%', search_term, '%');
+
+    RETURN result;
+END //
+
+DELIMITER ;
+-- calling function
+SELECT search_engine('12');

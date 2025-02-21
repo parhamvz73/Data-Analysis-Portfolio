@@ -117,3 +117,29 @@ FROM video_game_sales
 order by genre asc ) as unique_genre;
 -- showing table called genres
 SELECT * FROM Genres;
+
+CREATE TABLE Sales(
+ID int ,
+North_America decimal(12,2),
+Europe decimal(12,2),
+Japan decimal(12,2),
+Rest decimal(12,2));
+--
+SELECT
+ID,
+NA_SALES * 1000000 as North_America,
+EU_SALES * 1000000 as Europe,
+JP_SALES * 1000000 as Japan,
+Other_SALES * 1000000 as Rest
+FROM video_game_sales;
+--
+INSERT INTO Sales (ID,North_America,Europe,Japan,Rest)
+SELECT
+ID,
+NA_SALES * 1000000 as North_America,
+EU_SALES * 1000000 as Europe,
+JP_SALES * 1000000 as Japan,
+Other_SALES * 1000000 as Rest
+FROM video_game_sales;
+-- 
+SELECT * FROM Sales;

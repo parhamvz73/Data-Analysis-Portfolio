@@ -1,0 +1,219 @@
+SELECT * FROM video_game_sales_db.video_game_sales;
+-- merging separated corrected tables
+SELECT 
+t1.ID,
+t1.Name,
+t1.year,
+t2.platform,
+t3.publisher,
+t4.genre,
+t5.North_America,
+t5.Europe,
+t5.Japan,
+Rest
+FROM video_game_sales t1
+inner join platforms t2
+ON t1.platform = t2.platform
+inner join publishers t3
+on t1.publisher = t3.publisher
+inner join genres t4
+on t1.genre = t4.genre
+inner join sales t5
+on t1.id = t5.id;
+-- connecting nirmalized tables with ID'sounds like
+CREATE VIEW VG_V2 AS
+SELECT 
+t1.ID,
+t1.Name,
+t1.year,
+t2.platform_id,
+t3.publisher_id,
+t4.genre_id,
+t5.North_America,
+t5.Europe,
+t5.Japan,
+Rest
+FROM video_game_sales t1
+inner join platforms t2
+ON t1.platform = t2.platform
+inner join publishers t3
+on t1.publisher = t3.publisher
+inner join genres t4
+on t1.genre = t4.genre
+inner join sales t5
+on t1.id = t5.id;
+
+SELECT * FROM vg_v2;
+
+CREATE VIEW Total_Sale as
+SELECT
+*,
+(North_America + Europe + Japan + Rest) AS Total_Sale
+FROM VG_V2
+
+-- VIEW FOR PLAY STATION ONLY
+CREATE VIEW PlayStation AS
+SELECT * FROM total_sale
+where platform_id in
+(
+16,
+17,
+18,
+19,
+20
+)
+ORDER BY total_sale desc, publisher_id asc;
+-- VIEW FOR ACTION GAMES
+CREATE VIEW action_games
+AS
+SELECT * FROM Total_Sale
+WHERE genre_id = 1
+ORDER BY total_sale DESC,publisher_id ASC;
+
+CREATE VIEW annual_sales_growth
+AS
+with totals
+as
+(
+SELECT
+year,
+total_na,
+lag(total_na) over() as last_year_total_na,
+total_eu,
+lag(total_eu) over() as last_year_total_eu,
+total_JP,
+lag(total_JP) over() as last_year_total_JP,
+total_others,
+lag(total_others) over() as last_year_total_others
+FROM
+(select  
+year,
+sum(north_america) as total_NA,
+sum(europe) AS total_EU,
+sum(japan) AS total_JP,
+sum(rest) AS total_others
+from total_sale
+WHERE year <> 0
+GROUP BY year
+ORDER BY year asc) AS cte1
+)
+SELECT 
+*,
+(ifnull(total_na,0) - ifnull(last_year_total_na,0)) as NA_sales_growth,
+(ifnull(total_eu,0) - ifnull(last_year_total_eu,0)) as EU_sales_growth,
+(ifnull(total_jp,0) - ifnull(last_year_total_jp,0)) as JP_sales_growth,
+(ifnull(total_others,0) - ifnull(last_year_total_others,0)) as others_sales_growth
+FROM totals;
+
+
+-- VIEW FOR EACH PLATFORM GAME YEAR RELEASE
+CREATE VIEW platform_based_game_released_year
+AS
+WITH CTE2
+AS
+(
+with cte1
+as
+(SELECT 
+ifnull(platform_id,0) as platform_id,
+year AS release_year
+FROM VG_V2
+where year <> 0 
+)
+SELECT
+platform_id,
+min(release_year) as oldest_release,
+max(release_year) as newest_release
+from cte1
+GROUP BY platform_id
+HAVING platform_ID <> 0
+ORDER BY platform_id asc
+)
+SELECT 
+t1.platform_ID,
+t2.platform,
+t1.oldest_release,
+t1.newest_release
+FROM CTE2 t1
+INNER JOIN platforms t2
+ON t1.platform_id = t2.platform_id
+
+
+SELECT * FROM genres;
+-- CREATING VIEW CONTANINING OLDEST AND NEWEST GAME RELEASE BASED ON GENRE
+CREATE VIEW genre_based_game_released_year
+AS
+WITH cte2
+AS
+(
+with cte1
+as
+(
+SELECT 
+t1.genre_id as Genre_id,
+t2.genre as Genre,
+t1.ID as ID,
+t1.year as Release_Year
+FROM
+vg_v2 t1
+INNER JOIN genres t2
+ON t1.genre_id = t2.genre_id
+WHERE YEAR <> 0)
+SELECT 
+genre_id,
+genre,
+count(distinct ID),
+min(Release_Year) as Oldest_release,
+max(Release_Year) as Newest_release
+FROM cte1
+group by genre_id )
+SELECT 
+Genre_ID,
+Genre,
+Oldest_Release,
+Newest_Release
+FROM cte2;
+
+
+SELECT * FROM total_Sale;
+-- total sales ever based on genre or platform or publisher also next step broken down by location
+CREATE VIEW genre_total_sale_ever
+AS
+WITH cte1
+as(
+SELECT 
+    IFNULL(genre_id, 0) AS genre_id,
+    IFNULL(year, 0) AS years,
+    SUM(total_sale) AS total_sales
+FROM total_sale
+GROUP BY genre_id, year  
+HAVING genre_id <> 0 AND  year <> 0
+ORDER BY genre_id ASC, years ASC)
+SELECT
+t2.genre,
+t1.years,
+t1.total_sales
+FROM cte1 t1
+INNER JOIN genres t2
+ON t1.genre_id = t2.genre_id;
+-- Best and worst selling genre and year
+CREATE VIEW most_sold_genre_ever
+AS
+SELECT 
+genre,
+years,
+total_sales
+FROM genre_total_sale_ever
+ORDER BY total_sales desc
+LIMIT 1;
+
+-- Best and worst selling genre and year
+CREATE VIEW least_sold_genre_ever
+AS
+SELECT 
+genre,
+years,
+total_sales
+FROM genre_total_sale_ever
+ORDER BY total_sales asc
+LIMIT 1;
